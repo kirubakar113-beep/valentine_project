@@ -9,73 +9,66 @@
       margin: 0;
       padding: 0;
       font-family: Arial, sans-serif;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
       background: pink;
       overflow: hidden;
+      height: 100vh;
     }
 
     .box {
+      width: 420px;
       background: white;
       padding: 40px;
       border-radius: 20px;
       text-align: center;
-      width: 350px;
-      box-shadow: 0px 0px 20px rgba(0,0,0,0.2);
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      box-shadow: 0px 0px 25px rgba(0,0,0,0.2);
     }
 
     h1 {
-      font-size: 22px;
+      font-size: 25px;
+      color: crimson;
     }
 
     button {
       padding: 12px 25px;
-      font-size: 16px;
+      font-size: 18px;
       border: none;
       border-radius: 12px;
       cursor: pointer;
-      margin: 15px;
+      margin: 10px;
     }
 
     #yesBtn {
-      background: red;
+      background: tomato;
       color: white;
     }
 
     #noBtn {
-      background: gray;
-      color: white;
+      background: lightgray;
+      position: absolute;
       transition: 0.15s;
     }
 
-    /* Music Button */
-    #playBtn {
-      display: none;
-      padding: 10px 20px;
-      border-radius: 12px;
-      background: purple;
-      color: white;
-      font-size: 16px;
-      cursor: pointer;
-      margin-bottom: 15px;
+    #msg {
+      margin-top: 15px;
+      font-size: 18px;
+      color: purple;
+      font-weight: bold;
+      height: 30px;
     }
   </style>
 </head>
 
 <body>
 
-  <!-- 🎵 Background Music -->
-  <audio id="bgMusic" loop>
-    <source src="/static/song.mp3" type="audio/mpeg">
-  </audio>
-
-  <!-- 🎶 Play Button if autoplay blocked -->
-  <button id="playBtn">▶ Play Music 🎶</button>
-
   <div class="box">
-    <h1>Will you be my Valentine ? 💖</h1>
+    <h1>Will you be my Valentine? 💖</h1>
+
+    <!-- Funny Message -->
+    <p id="msg"></p>
 
     <!-- YES Button -->
     <button id="yesBtn">YES 💘</button>
@@ -85,54 +78,56 @@
   </div>
 
   <script>
-    // Elements
     const yesBtn = document.getElementById("yesBtn");
     const noBtn = document.getElementById("noBtn");
-    const music = document.getElementById("bgMusic");
-    const playBtn = document.getElementById("playBtn");
+    const msg = document.getElementById("msg");
 
-    // ✅ Try Autoplay Music
-    window.onload = () => {
-      music.play().then(() => {
-        console.log("Music autoplay started 🎶");
-      }).catch(() => {
-        console.log("Autoplay blocked ❌ Showing Play Button");
-        playBtn.style.display = "inline-block";
-      });
-    };
+    // Funny Messages
+    const funnyMessages = [
+      "Hey 😳 Don't say NO!",
+      "NO is not allowed 😤",
+      "Pleaseeee 🥺",
+      "Think again 💖",
+      "You can't escape 😈",
+      "Just press YES 😘",
+      "NO button is useless 😂",
+      "Stop touching NO 🤭"
+    ];
 
-    // ✅ Play Button Manual Start
-    playBtn.addEventListener("click", () => {
-      music.play();
-      playBtn.style.display = "none";
-    });
+    let msgIndex = 0;
 
-    // ✅ YES Button Redirect
-    yesBtn.addEventListener("click", () => {
-      window.location.href = "/yes";
-    });
-
-    // ✅ NO Button Move Function (Unlimited)
+    // Move NO Button Randomly
     function moveNoButton() {
       const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
       const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
 
-      noBtn.style.position = "absolute";
       noBtn.style.left = x + "px";
       noBtn.style.top = y + "px";
+
+      // Show funny message
+      msg.innerText = funnyMessages[msgIndex];
+      msgIndex = (msgIndex + 1) % funnyMessages.length;
     }
 
-    // 🖱 Desktop Hover
+    // Desktop Hover
     noBtn.addEventListener("mouseover", moveNoButton);
 
-    // 📱 Mobile Touch
+    // Mobile Touch
     noBtn.addEventListener("touchstart", moveNoButton);
 
-    // ❌ Prevent Clicking NO
-    noBtn.addEventListener("click", function (e) {
+    // Prevent Clicking NO
+    noBtn.addEventListener("click", function(e) {
       e.preventDefault();
       moveNoButton();
     });
+
+    // YES Redirect
+    yesBtn.addEventListener("click", function () {
+      window.location.href = "/yes";
+    });
+
+    // Start NO button position
+    moveNoButton();
   </script>
 
 </body>
