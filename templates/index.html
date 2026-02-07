@@ -1,171 +1,139 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Valentine 💖</title>
+  <meta charset="UTF-8">
+  <title>Valentine 💖</title>
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: pink;
+      overflow: hidden;
+    }
 
-    <style>
-        body {
-            background: pink;
-            font-family: Arial;
-            text-align: center;
-            overflow: hidden;
-            margin: 0;
-            padding: 0;
-        }
+    .box {
+      background: white;
+      padding: 40px;
+      border-radius: 20px;
+      text-align: center;
+      width: 350px;
+      box-shadow: 0px 0px 20px rgba(0,0,0,0.2);
+    }
 
-        .box {
-            background: white;
-            width: 90%;
-            max-width: 450px;
-            margin: auto;
-            margin-top: 120px;
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0px 0px 15px gray;
-            position: relative;
-        }
+    h1 {
+      font-size: 22px;
+    }
 
-        h1 {
-            font-size: 28px;
-        }
+    button {
+      padding: 12px 25px;
+      font-size: 16px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      margin: 15px;
+    }
 
-        button {
-            padding: 15px 30px;
-            font-size: 18px;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            margin: 15px;
-        }
+    #yesBtn {
+      background: red;
+      color: white;
+    }
 
-        #yesBtn {
-            background: red;
-            color: white;
-        }
+    #noBtn {
+      background: gray;
+      color: white;
+      transition: 0.15s;
+    }
 
-        #noBtn {
-            background: lightgray;
-            position: absolute;
-        }
-
-        #msg {
-            font-size: 18px;
-            color: darkred;
-            height: 30px;
-        }
-
-        /* Floating Hearts */
-        .heart {
-            position: fixed;
-            font-size: 25px;
-            animation: floatUp 4s linear infinite;
-        }
-
-        @keyframes floatUp {
-            0% {
-                bottom: 0;
-                opacity: 1;
-            }
-
-            100% {
-                bottom: 100%;
-                opacity: 0;
-            }
-        }
-    </style>
+    /* Music Button */
+    #playBtn {
+      display: none;
+      padding: 10px 20px;
+      border-radius: 12px;
+      background: purple;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      margin-bottom: 15px;
+    }
+  </style>
 </head>
 
 <body>
-    
-    <!-- Background Music -->
-<audio id="bgMusic" loop>
+
+  <!-- 🎵 Background Music -->
+  <audio id="bgMusic" loop>
     <source src="/static/song.mp3" type="audio/mpeg">
-</audio>
+  </audio>
 
-<!-- Play Button (only shows if autoplay fails) -->
-<button id="playBtn" style="
-    display:none;
-    padding:10px 20px;
-    font-size:16px;
-    border:none;
-    border-radius:10px;
-    background:purple;
-    color:white;
-    cursor:pointer;
-    margin-top:20px;">
-    ▶ Play Music 🎶
-</button>
-    <div class="box">
-        <h1>Will you be my Valentine ? 💖</h1>
+  <!-- 🎶 Play Button if autoplay blocked -->
+  <button id="playBtn">▶ Play Music 🎶</button>
 
-        <!-- Funny Message -->
-        <p id="msg"></p>
+  <div class="box">
+    <h1>Will you be my Valentine ? 💖</h1>
 
-        <!-- YES Button -->
-        <button id="yesBtn" onclick="window.location.href='/yes'">
-            YES 💘
-        </button>
+    <!-- YES Button -->
+    <button id="yesBtn">YES 💘</button>
 
-        <!-- NO Button -->
-        <button id="noBtn">
-            NO 😢
-        </button>
-    </div>
+    <!-- NO Button -->
+    <button id="noBtn">NO 😜</button>
+  </div>
 
-    <script>
-        // NO Button Escape + Funny Message
-        const noBtn = document.getElementById("noBtn");
-        const msg = document.getElementById("msg");
+  <script>
+    // Elements
+    const yesBtn = document.getElementById("yesBtn");
+    const noBtn = document.getElementById("noBtn");
+    const music = document.getElementById("bgMusic");
+    const playBtn = document.getElementById("playBtn");
 
-        let count = 0;
+    // ✅ Try Autoplay Music
+    window.onload = () => {
+      music.play().then(() => {
+        console.log("Music autoplay started 🎶");
+      }).catch(() => {
+        console.log("Autoplay blocked ❌ Showing Play Button");
+        playBtn.style.display = "inline-block";
+      });
+    };
 
-        function moveButton() {
-            count++;
+    // ✅ Play Button Manual Start
+    playBtn.addEventListener("click", () => {
+      music.play();
+      playBtn.style.display = "none";
+    });
 
-            const messages = [
-                "Ayyyo don't press NO 😭",
-                "Pleaseee say YES 🥺💖",
-                "NO button romba shy 😆",
-                "Come onnn ❤️ YES தான் correct!",
-                "Escapeeee 🏃‍♂️💨"
-            ];
+    // ✅ YES Button Redirect
+    yesBtn.addEventListener("click", () => {
+      window.location.href = "/yes";
+    });
 
-            msg.innerHTML = messages[count % messages.length];
+    // ✅ NO Button Move Function (Unlimited)
+    function moveNoButton() {
+      const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
+      const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
 
-            // Random Position
-            let x = Math.random() * (window.innerWidth - 120);
-            let y = Math.random() * (window.innerHeight - 120);
+      noBtn.style.position = "absolute";
+      noBtn.style.left = x + "px";
+      noBtn.style.top = y + "px";
+    }
 
-            noBtn.style.left = x + "px";
-            noBtn.style.top = y + "px";
-        }
+    // 🖱 Desktop Hover
+    noBtn.addEventListener("mouseover", moveNoButton);
 
-        // Desktop Hover
-        noBtn.addEventListener("mouseover", moveButton);
+    // 📱 Mobile Touch
+    noBtn.addEventListener("touchstart", moveNoButton);
 
-        // Mobile Touch
-        noBtn.addEventListener("touchstart", moveButton);
-
-        // Floating Hearts Animation
-        function createHeart() {
-            const heart = document.createElement("div");
-            heart.classList.add("heart");
-            heart.innerHTML = "💖";
-
-            heart.style.left = Math.random() * 100 + "vw";
-            heart.style.animationDuration = (2 + Math.random() * 3) + "s";
-
-            document.body.appendChild(heart);
-
-            setTimeout(() => {
-                heart.remove();
-            }, 4000);
-        }
-
-        setInterval(createHeart, 500);
-    </script>
+    // ❌ Prevent Clicking NO
+    noBtn.addEventListener("click", function (e) {
+      e.preventDefault();
+      moveNoButton();
+    });
+  </script>
 
 </body>
 </html>
